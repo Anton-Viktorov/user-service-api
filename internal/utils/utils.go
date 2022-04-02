@@ -1,6 +1,13 @@
 package utils
 
+import "strconv"
+
 func SplitSlice(slice []int64, n int64) [][]int64 {
+
+	if n <= 0 || slice == nil {
+		return nil
+	}
+
 	var i int64
 	result := make([][]int64, 0)
 	lastIndex := (int64(len(slice)) / n) * n
@@ -16,15 +23,30 @@ func SplitSlice(slice []int64, n int64) [][]int64 {
 }
 
 func ReverseKey(m map[int64]int64) map[int64]int64 {
+
+	if m == nil {
+		return nil
+	}
+
 	result := make(map[int64]int64)
 
 	for k, v := range m {
-		result[v] = k
+		_, ok := result[v]
+		if !ok {
+			result[v] = k
+		} else {
+			panic("duplicate key" + strconv.FormatInt(v, 10))
+		}
 	}
 	return result
 }
 
 func FilterSlice(slice []int64) []int64 {
+
+	if slice == nil {
+		return nil
+	}
+
 	omitValues := [5]int64{1, 3, 5, 7, 9}
 	result := make([]int64, 0)
 
