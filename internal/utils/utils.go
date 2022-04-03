@@ -1,69 +1,62 @@
 package utils
 
-import "strconv"
+import (
+	"errors"
+)
 
-func SplitSlice(slice []int64, n int64) [][]int64 {
-
-	if n <= 0 || slice == nil {
-		return nil
+func SplitSlice(data []int64, batchSize int64) ([][]int64, error) {
+	if batchSize <= 0 || data == nil {
+		return nil, nil
 	}
 
-	var i int64
-	result := make([][]int64, 0)
-	lastIndex := (int64(len(slice)) / n) * n
+	res := make([][]int64, 0)
+	batchCount := int64(len(data)) / batchSize
 
-	for i < lastIndex {
-		result = append(result, slice[i:i+n])
-		i += n
+	for i := int64(1); i <= batchCount; i++ {
+		res = append(res, data[(i-1)*batchSize:i*batchSize])
 	}
-	if lastIndex < int64(len(slice)) {
-		result = append(result, slice[lastIndex:])
+
+	if batchSize*batchCount < int64(len(data)) {
+		res = append(res, data[batchSize*batchCount:])
 	}
-	return result
+	return res, nil
 }
 
-func ReverseKey(m map[int64]int64) map[int64]int64 {
-
-	if m == nil {
-		return nil
+func ReverseKey(data map[int64]string) (map[string]int64, error) {
+	if data == nil {
+		return nil, nil
 	}
 
-	result := make(map[int64]int64)
+	res := make(map[string]int64)
 
-	for k, v := range m {
-		_, ok := result[v]
-		if !ok {
-			result[v] = k
+	for k, v := range data {
+		if _, ok := res[v]; !ok {
+			res[v] = k
 		} else {
-			panic("duplicate key" + strconv.FormatInt(v, 10))
+			err := errors.New("duplicate key: " + v)
+			return nil, err
 		}
 	}
-	return result
+	return res, nil
+
 }
 
-func FilterSlice(slice []int64) []int64 {
-
-	if slice == nil {
-		return nil
+func FilterSlice(data, omitValues []int64) ([]int64, error) {
+	if data == nil || omitValues == nil {
+		return data, nil
 	}
 
-	omitValues := [5]int64{1, 3, 5, 7, 9}
-	result := make([]int64, 0)
-
-	needOmit := func(v int64, list *[5]int64) bool {
-		for _, value := range list {
-			if value == v {
-				return true
-			}
-		}
-		return false
+	omitValuesMap := make(map[int64]struct{})
+	for _, val := range omitValues {
+		omitValuesMap[val] = struct{}{}
 	}
 
-	for _, sliceValue := range slice {
-		if needOmit(sliceValue, &omitValues) {
+	res := make([]int64, 0)
+	for _, sliceValue := range data {
+		if _, ok := omitValuesMap[sliceValue]; ok {
 			continue
 		}
-		result = append(result, sliceValue)
+		res = append(res, sliceValue)
 	}
-	return result
+	return res, nil
 }
