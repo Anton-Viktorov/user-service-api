@@ -34,11 +34,6 @@ func TestSplitSlice(t *testing.T) {
 			InputSlice:  []int64{1, 2, 3, 4, 5},
 			OutputSlice: [][]int64{{1, 2, 3, 4, 5}},
 		},
-		{
-			ChunkSize:   2,
-			InputSlice:  nil,
-			OutputSlice: nil,
-		},
 	}
 
 	for _, data := range datasets {
@@ -47,6 +42,11 @@ func TestSplitSlice(t *testing.T) {
 			t, data.OutputSlice, result, "Test failed. Expected: %v, Given %v", data.OutputSlice, result,
 		)
 	}
+}
+
+func TestSplitSliceError(t *testing.T) {
+	_, err := SplitSlice(nil, 2)
+	require.Error(t, err, "Error does not raise")
 }
 
 func TestReverseKey(t *testing.T) {
@@ -64,10 +64,6 @@ func TestReverseKey(t *testing.T) {
 		{
 			InputMap:  map[int64]string{},
 			OutputMap: map[string]int64{},
-		},
-		{
-			InputMap:  nil,
-			OutputMap: nil,
 		},
 	}
 
@@ -107,11 +103,6 @@ func TestFilterSlice(t *testing.T) {
 			OutputSlice: []int64{1, 2, 3},
 		},
 		{
-			InputSlice:  []int64{1, 2, 3},
-			FilterSlice: nil,
-			OutputSlice: []int64{1, 2, 3},
-		},
-		{
 			InputSlice:  nil,
 			FilterSlice: nil,
 			OutputSlice: nil,
@@ -124,4 +115,12 @@ func TestFilterSlice(t *testing.T) {
 			t, data.OutputSlice, result, "Test failed. Expected: %v, Given %v", data.OutputSlice, result,
 		)
 	}
+}
+
+func TestErrorFilterSlice(t *testing.T) {
+	_, err := FilterSlice(nil, []int64{1, 2, 3})
+	require.Error(t, err, "Error does not raise")
+
+	_, err = FilterSlice([]int64{1, 2, 3}, nil)
+	require.Error(t, err, "Error does not raise")
 }

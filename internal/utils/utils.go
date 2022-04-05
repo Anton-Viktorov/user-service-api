@@ -6,10 +6,10 @@ import (
 
 func SplitSlice(data []int64, batchSize int64) ([][]int64, error) {
 	if batchSize <= 0 || data == nil {
-		return nil, nil
+		return nil, errors.New("input argument invalid")
 	}
 
-	res := make([][]int64, 0)
+	var res [][]int64
 	batchCount := int64(len(data)) / batchSize
 
 	for i := int64(1); i <= batchCount; i++ {
@@ -19,44 +19,44 @@ func SplitSlice(data []int64, batchSize int64) ([][]int64, error) {
 	if batchSize*batchCount < int64(len(data)) {
 		res = append(res, data[batchSize*batchCount:])
 	}
+
 	return res, nil
 }
 
 func ReverseKey(data map[int64]string) (map[string]int64, error) {
 	if data == nil {
-		return nil, nil
+		return nil, errors.New("input argument invalid")
 	}
 
 	res := make(map[string]int64)
 
 	for k, v := range data {
-		if _, ok := res[v]; !ok {
+		if _, found := res[v]; !found {
 			res[v] = k
 		} else {
-			err := errors.New("duplicate key: " + v)
-			return nil, err
+			return nil, errors.New("duplicate key: " + v)
 		}
 	}
-	return res, nil
 
+	return res, nil
 }
 
-func FilterSlice(data, omitValues []int64) ([]int64, error) {
-	if data == nil || omitValues == nil {
-		return data, nil
+func FilterSlice(data []int64, filter []int64) ([]int64, error) {
+	if data == nil || filter == nil {
+		return nil, errors.New("input argument invalid")
 	}
 
-	omitValuesMap := make(map[int64]struct{})
-	for _, val := range omitValues {
-		omitValuesMap[val] = struct{}{}
+	filterMap := make(map[int64]struct{})
+	for _, val := range filter {
+		filterMap[val] = struct{}{}
 	}
 
-	res := make([]int64, 0)
-	for _, sliceValue := range data {
-		if _, ok := omitValuesMap[sliceValue]; ok {
-			continue
+	var res []int64
+	for _, v := range data {
+		if _, found := filterMap[v]; !found {
+			res = append(res, v)
 		}
-		res = append(res, sliceValue)
 	}
+
 	return res, nil
 }
