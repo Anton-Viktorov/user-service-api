@@ -5,26 +5,27 @@ import (
 	"fmt"
 )
 
-func SplitSlice(data []int64, batchSize int64) ([][]int64, error) {
-	if batchSize <= 0 || data == nil {
+func SplitSlice(data []int64, sizeOfBatch int64) ([][]int64, error) {
+	if sizeOfBatch <= 0 || data == nil {
 		return nil, errors.New("input argument invalid")
 	}
 
-	var batchCount int64
+	var batchCount int
+	batchSize := int(sizeOfBatch)
 
-	if int64(len(data))%batchSize == 0 {
-		batchCount = int64(len(data)) / batchSize
+	if len(data)%batchSize == 0 {
+		batchCount = len(data) / batchSize
 	} else {
-		batchCount = (int64(len(data)) / batchSize) + 1
+		batchCount = (len(data) / batchSize) + 1
 	}
 
 	res := make([][]int64, 0, batchCount)
 
-	for i := int64(0); i < int64(len(data)); {
+	for i := 0; i < len(data); {
 		end := i + batchSize
 
-		if end > int64(len(data)) {
-			end = int64(len(data))
+		if end > len(data) {
+			end = len(data)
 		}
 
 		res = append(res, data[i:end])
