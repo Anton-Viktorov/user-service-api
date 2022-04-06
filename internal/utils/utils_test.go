@@ -7,120 +7,120 @@ import (
 
 func TestSplitSlice(t *testing.T) {
 
-	type Dataset struct {
-		ChunkSize   int64
-		InputSlice  []int64
-		OutputSlice [][]int64
-	}
+	t.Run("accurate split", func(t *testing.T) {
+		input := []int64{1, 2, 3, 4}
+		expected := [][]int64{{1, 2}, {3, 4}}
+		res, err := SplitSlice(input, 2)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-	datasets := []Dataset{
-		{
-			ChunkSize:   2,
-			InputSlice:  []int64{1, 2, 3, 4},
-			OutputSlice: [][]int64{{1, 2}, {3, 4}},
-		},
-		{
-			ChunkSize:   3,
-			InputSlice:  []int64{1, 2, 3, 4, 5},
-			OutputSlice: [][]int64{{1, 2, 3}, {4, 5}},
-		},
-		{
-			ChunkSize:   2,
-			InputSlice:  []int64{1, 2, 3, 4, 5, 6, 7, 8, 9},
-			OutputSlice: [][]int64{{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9}},
-		},
-		{
-			ChunkSize:   10,
-			InputSlice:  []int64{1, 2, 3, 4, 5},
-			OutputSlice: [][]int64{{1, 2, 3, 4, 5}},
-		},
-	}
+	t.Run("last slice is less than chunk size", func(t *testing.T) {
+		input := []int64{1, 2, 3, 4, 5}
+		expected := [][]int64{{1, 2, 3}, {4, 5}}
+		res, err := SplitSlice(input, 3)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-	for _, data := range datasets {
-		result, _ := SplitSlice(data.InputSlice, data.ChunkSize)
-		require.Equalf(
-			t, data.OutputSlice, result, "Test failed. Expected: %v, Given %v", data.OutputSlice, result,
-		)
-	}
-}
+	t.Run("last slice is less than chunk size", func(t *testing.T) {
+		input := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9}
+		expected := [][]int64{{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9}}
+		res, err := SplitSlice(input, 2)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-func TestSplitSliceError(t *testing.T) {
-	_, err := SplitSlice(nil, 2)
-	require.Error(t, err, "Error does not raise")
+	t.Run("chunk size is equal slice len", func(t *testing.T) {
+		input := []int64{1, 2, 3, 4, 5}
+		expected := [][]int64{{1, 2, 3, 4, 5}}
+		res, err := SplitSlice(input, 5)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
+
+	t.Run("chunk size is larger than slice len", func(t *testing.T) {
+		input := []int64{1, 2, 3, 4, 5}
+		expected := [][]int64{{1, 2, 3, 4, 5}}
+		res, err := SplitSlice(input, 10)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
+
+	t.Run("nil data raises error", func(t *testing.T) {
+		_, err := SplitSlice(nil, 2)
+		require.Error(t, err)
+	})
 }
 
 func TestReverseKey(t *testing.T) {
 
-	type Dataset struct {
-		InputMap  map[int64]string
-		OutputMap map[string]int64
-	}
+	t.Run("base success case", func(t *testing.T) {
+		input := map[int64]string{1: "one", 2: "two", 3: "three"}
+		expected := map[string]int64{"one": 1, "two": 2, "three": 3}
+		res, err := ReverseKey(input)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-	datasets := []Dataset{
-		{
-			InputMap:  map[int64]string{1: "one", 2: "two", 3: "three"},
-			OutputMap: map[string]int64{"one": 1, "two": 2, "three": 3},
-		},
-		{
-			InputMap:  map[int64]string{},
-			OutputMap: map[string]int64{},
-		},
-	}
+	t.Run("empty map", func(t *testing.T) {
+		input := map[int64]string{}
+		expected := map[string]int64{}
+		res, err := ReverseKey(input)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-	for _, data := range datasets {
-		result, _ := ReverseKey(data.InputMap)
-		require.Equalf(t, data.OutputMap, result, "Test failed. Expected: %v, Given %v", data.OutputMap, result)
-	}
-}
+	t.Run("duplicate key raises error", func(t *testing.T) {
+		wrongData := map[int64]string{1: "one", 2: "one"}
+		_, err := ReverseKey(wrongData)
+		require.Error(t, err)
+	})
 
-func TestErrorReverseKey(t *testing.T) {
-	wrongMap := map[int64]string{1: "one", 2: "one"}
-	_, err := ReverseKey(wrongMap)
-	require.Error(t, err, "Error does not raise")
+	t.Run("nil data raises error", func(t *testing.T) {
+		_, err := ReverseKey(nil)
+		require.Error(t, err)
+	})
+
 }
 
 func TestFilterSlice(t *testing.T) {
-	type Dataset struct {
-		InputSlice  []int64
-		FilterSlice []int64
-		OutputSlice []int64
-	}
 
-	datasets := []Dataset{
-		{
-			InputSlice:  []int64{1, 2, 3, 4, 5, 6, 7, 8, 9},
-			FilterSlice: []int64{1, 3, 5, 7, 9},
-			OutputSlice: []int64{2, 4, 6, 8},
-		},
-		{
-			InputSlice:  []int64{1, 1, 3, 3, 4, 4},
-			FilterSlice: []int64{1, 3, 5, 7, 9},
-			OutputSlice: []int64{4, 4},
-		},
-		{
-			InputSlice:  []int64{1, 2, 3},
-			FilterSlice: []int64{},
-			OutputSlice: []int64{1, 2, 3},
-		},
-		{
-			InputSlice:  nil,
-			FilterSlice: nil,
-			OutputSlice: nil,
-		},
-	}
+	t.Run("base success case", func(t *testing.T) {
+		input := []int64{1, 2, 3, 4, 5, 6, 7, 8, 9}
+		filter := []int64{1, 3, 5, 7, 9}
+		expected := []int64{2, 4, 6, 8}
+		res, err := FilterSlice(input, filter)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-	for _, data := range datasets {
-		result, _ := FilterSlice(data.InputSlice, data.FilterSlice)
-		require.Equalf(
-			t, data.OutputSlice, result, "Test failed. Expected: %v, Given %v", data.OutputSlice, result,
-		)
-	}
-}
+	t.Run("filter all data items", func(t *testing.T) {
+		input := []int64{1, 2, 3}
+		filter := []int64{1, 2, 3}
+		var expected []int64
+		res, err := FilterSlice(input, filter)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-func TestErrorFilterSlice(t *testing.T) {
-	_, err := FilterSlice(nil, []int64{1, 2, 3})
-	require.Error(t, err, "Error does not raise")
+	t.Run("empty filter", func(t *testing.T) {
+		input := []int64{1, 2, 3}
+		filter := make([]int64, 0)
+		expected := []int64{1, 2, 3}
+		res, err := FilterSlice(input, filter)
+		require.NoError(t, err)
+		require.Equal(t, expected, res)
+	})
 
-	_, err = FilterSlice([]int64{1, 2, 3}, nil)
-	require.Error(t, err, "Error does not raise")
+	t.Run("nil data raises error", func(t *testing.T) {
+		_, err := FilterSlice(nil, []int64{1, 2, 3})
+		require.Error(t, err)
+	})
+
+	t.Run("nil data raises error", func(t *testing.T) {
+		_, err := FilterSlice([]int64{1, 2, 3}, nil)
+		require.Error(t, err)
+	})
+
 }
