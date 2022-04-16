@@ -3,6 +3,7 @@ package user_v1
 import (
 	"context"
 	"fmt"
+
 	desc "github.com/iamtonydev/user-service-api/pkg/user_v1"
 )
 
