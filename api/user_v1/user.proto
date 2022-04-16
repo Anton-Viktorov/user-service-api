@@ -10,7 +10,11 @@ service UserV1 {
   rpc MultiAddUser (MultiAddUserRequest) returns (MultiAddUserResponse);
   rpc ListUser (Empty) returns (ListUserResponse);
   rpc RemoveUser (RemoveUserRequest) returns (Empty);
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (Empty);
+}
+
+message Empty {
+
 }
 
 message AddUserRequest {
@@ -33,9 +37,10 @@ message GetUserRequest {
 
 message GetUserResponse {
   message User {
-    string name = 1;
-    int64 age = 2;
-    string email = 3;
+    int64 id = 1;
+    string name = 2;
+    int64 age = 3;
+    string email = 4;
   }
 
   User result = 1;
@@ -53,22 +58,19 @@ message MultiAddUserRequest {
 
 message MultiAddUserResponse {
   message Result {
-    repeated int64 id = 1;
+    int64 count = 1;
   }
 
   Result result = 1;
 }
 
-message Empty {
-
-}
-
 message ListUserResponse {
   message Result {
     message User {
-      string name = 1;
-      int64 age = 2;
-      string email = 3;
+      int64 id = 1;
+      string name = 2;
+      int64 age = 3;
+      string email = 4;
     }
 
     repeated User user = 1;
@@ -86,14 +88,4 @@ message UpdateUserRequest {
   string name = 2;
   int64 age = 3;
   string email = 4;
-}
-
-message UpdateUserResponse {
-  message User {
-    string name = 2;
-    int64 age = 3;
-    string email = 4;
-  }
-
-  User result = 1;
 }

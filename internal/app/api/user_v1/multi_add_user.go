@@ -14,6 +14,8 @@ func (i *Implementation) MultiAddUser(ctx context.Context, req *desc.MultiAddUse
 	}
 
 	return &desc.MultiAddUserResponse{
-		Result: &desc.MultiAddUserResponse_Result{Id: []int64{1, 2}},
+		Result: &desc.MultiAddUserResponse_Result{
+			Count: int64(len(req.GetUsers())),
+		},
 	}, nil
 }

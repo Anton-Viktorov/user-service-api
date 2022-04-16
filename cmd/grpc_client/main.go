@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+
 	desc "github.com/iamtonydev/user-service-api/pkg/user_v1"
 	"google.golang.org/grpc"
-	"log"
 )
 
 const address = "localhost:50051"
@@ -63,8 +64,8 @@ func main() {
 		log.Fatalf("failed to multi add users %s", err.Error())
 	}
 
-	fmt.Println("=== user ids ===")
-	fmt.Printf("user ids: %v\n", users.GetResult().GetId())
+	fmt.Println("=== users count ===")
+	fmt.Printf("users added: %v\n", users.GetResult().GetCount())
 
 	// list users
 	listUsers, err := client.ListUser(ctx, &desc.Empty{})
@@ -82,7 +83,7 @@ func main() {
 	}
 
 	// update user
-	updateUser, err := client.UpdateUser(ctx, &desc.UpdateUserRequest{
+	_, err = client.UpdateUser(ctx, &desc.UpdateUserRequest{
 		Id:    1,
 		Name:  "NewAdmin",
 		Age:   100500,
@@ -91,9 +92,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to update user %s", err.Error())
 	}
-
-	fmt.Println("=== user info ===")
-	fmt.Printf("name: %s\n", updateUser.GetResult().GetName())
-	fmt.Printf("age: %d\n", updateUser.GetResult().GetAge())
-	fmt.Printf("email: %s\n", updateUser.GetResult().GetEmail())
 }

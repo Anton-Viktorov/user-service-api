@@ -27,7 +27,7 @@ type UserV1Client interface {
 	MultiAddUser(ctx context.Context, in *MultiAddUserRequest, opts ...grpc.CallOption) (*MultiAddUserResponse, error)
 	ListUser(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListUserResponse, error)
 	RemoveUser(ctx context.Context, in *RemoveUserRequest, opts ...grpc.CallOption) (*Empty, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type userV1Client struct {
@@ -83,8 +83,8 @@ func (c *userV1Client) RemoveUser(ctx context.Context, in *RemoveUserRequest, op
 	return out, nil
 }
 
-func (c *userV1Client) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
-	out := new(UpdateUserResponse)
+func (c *userV1Client) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/api.user_v1.UserV1/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ type UserV1Server interface {
 	MultiAddUser(context.Context, *MultiAddUserRequest) (*MultiAddUserResponse, error)
 	ListUser(context.Context, *Empty) (*ListUserResponse, error)
 	RemoveUser(context.Context, *RemoveUserRequest) (*Empty, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*Empty, error)
 	mustEmbedUnimplementedUserV1Server()
 }
 
@@ -124,7 +124,7 @@ func (UnimplementedUserV1Server) ListUser(context.Context, *Empty) (*ListUserRes
 func (UnimplementedUserV1Server) RemoveUser(context.Context, *RemoveUserRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveUser not implemented")
 }
-func (UnimplementedUserV1Server) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+func (UnimplementedUserV1Server) UpdateUser(context.Context, *UpdateUserRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedUserV1Server) mustEmbedUnimplementedUserV1Server() {}

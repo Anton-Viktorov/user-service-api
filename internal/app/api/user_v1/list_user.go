@@ -8,17 +8,19 @@ import (
 )
 
 func (i *Implementation) ListUser(ctx context.Context, req *desc.Empty) (*desc.ListUserResponse, error) {
-	fmt.Println("=== users have been requested ===")
+	fmt.Println("=== users requested ===")
 
 	return &desc.ListUserResponse{
 		Result: &desc.ListUserResponse_Result{
 			User: []*desc.ListUserResponse_Result_User{
 				{
+					Id:    1,
 					Name:  "Admin",
 					Age:   100500,
 					Email: "admin@no.no",
 				},
 				{
+					Id:    2,
 					Name:  "Admin2",
 					Age:   100501,
 					Email: "admin2@no.no",
