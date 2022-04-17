@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package api.user_v1;
+
+option go_package = "github.com/iamtonydev/user-service-api/pkg/user_v1";
+
+service UserV1 {
+  rpc AddUser (AddUserRequest) returns (AddUserResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc MultiAddUser (MultiAddUserRequest) returns (MultiAddUserResponse);
+  rpc ListUser (Empty) returns (ListUserResponse);
+  rpc RemoveUser (RemoveUserRequest) returns (Empty);
+  rpc UpdateUser (UpdateUserRequest) returns (Empty);
+}
+
+message Empty {
+
+}
+
+message AddUserRequest {
+  string name = 1;
+  int64 age = 2;
+  string email = 3;
+}
+
+message AddUserResponse {
+  message Result {
+    int64 id = 1;
+  }
+
+  Result result = 1;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserResponse {
+  message User {
+    int64 id = 1;
+    string name = 2;
+    int64 age = 3;
+    string email = 4;
+  }
+
+  User result = 1;
+}
+
+message MultiAddUserRequest {
+  message User {
+    string name = 1;
+    int64 age = 2;
+    string email = 3;
+  }
+
+  repeated User users = 1;
+}
+
+message MultiAddUserResponse {
+  message Result {
+    int64 count = 1;
+  }
+
+  Result result = 1;
+}
+
+message ListUserResponse {
+  message Result {
+    message User {
+      int64 id = 1;
+      string name = 2;
+      int64 age = 3;
+      string email = 4;
+    }
+
+    repeated User user = 1;
+  }
+
+  Result result = 1;
+}
+
+message RemoveUserRequest {
+  int64 id = 1;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string name = 2;
+  int64 age = 3;
+  string email = 4;
+}
