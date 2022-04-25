@@ -10,7 +10,6 @@ import (
 )
 
 func (i *Implementation) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (*desc.Empty, error) {
-
 	// dirty implementation
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",

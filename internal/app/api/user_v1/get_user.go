@@ -2,6 +2,7 @@ package user_v1
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -10,7 +11,6 @@ import (
 )
 
 func (i *Implementation) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.GetUserResponse, error) {
-
 	// dirty implementation
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -38,6 +38,9 @@ func (i *Implementation) GetUser(ctx context.Context, req *desc.GetUserRequest) 
 	err = db.SelectContext(ctx, &res, query, args...)
 	if err != nil {
 		return nil, err
+	}
+	if len(res) <= 0 {
+		return nil, errors.New("user not found")
 	}
 
 	return &desc.GetUserResponse{

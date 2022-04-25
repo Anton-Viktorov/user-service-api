@@ -73,7 +73,7 @@ message ListUserResponse {
       string email = 4;
     }
 
-    repeated User user = 1;
+    repeated User users = 1;
   }
 
   Result result = 1;

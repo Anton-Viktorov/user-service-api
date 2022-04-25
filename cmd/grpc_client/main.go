@@ -36,7 +36,7 @@ func main() {
 	fmt.Printf("user id: %d\n", res.GetResult().GetId())
 
 	//get user
-	user, err := client.GetUser(ctx, &desc.GetUserRequest{Id: 10})
+	user, err := client.GetUser(ctx, &desc.GetUserRequest{Id: 2})
 	if err != nil {
 		log.Fatalf("failed to get user %s", err.Error())
 	}
@@ -75,7 +75,7 @@ func main() {
 	fmt.Printf("users info: %s\n", listUsers.GetResult())
 
 	// delete user
-	_, err = client.RemoveUser(ctx, &desc.RemoveUserRequest{Id: 5})
+	_, err = client.RemoveUser(ctx, &desc.RemoveUserRequest{Id: 2})
 	if err != nil {
 		log.Fatalf("failed to remove user %s", err.Error())
 	}

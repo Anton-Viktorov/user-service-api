@@ -17,7 +17,6 @@ type user struct {
 }
 
 func (i *Implementation) ListUser(ctx context.Context, req *desc.Empty) (*desc.ListUserResponse, error) {
-
 	// dirty implementation
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -57,7 +56,7 @@ func (i *Implementation) ListUser(ctx context.Context, req *desc.Empty) (*desc.L
 
 	return &desc.ListUserResponse{
 		Result: &desc.ListUserResponse_Result{
-			User: users,
+			Users: users,
 		},
 	}, nil
 }

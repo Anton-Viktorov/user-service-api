@@ -1,15 +1,19 @@
 version: "3"
+
+volumes:
+  postgres_volume:
+
+
 services:
   postgres:
-    image: postgres:13-alpine
+    image: postgres:14-alpine3.15
     environment:
       POSTGRES_DB: "user_service_api"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - ../2. Init Database:/docker-entrypoint-initdb.d
-      - .:/var/lib/postgresql/data
+      - postgres_volume:/var/lib/postgresql/data
+      - ./configs/postgres/docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "54321:5432"
-    command: ["postgres", "-c", "log_statement=all"]

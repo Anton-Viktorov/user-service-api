@@ -10,7 +10,6 @@ import (
 )
 
 func (i *Implementation) RemoveUser(ctx context.Context, req *desc.RemoveUserRequest) (*desc.Empty, error) {
-
 	// dirty implementation
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",

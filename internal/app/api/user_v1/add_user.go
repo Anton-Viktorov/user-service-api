@@ -8,7 +8,6 @@ import (
 	desc "github.com/iamtonydev/user-service-api/pkg/user_v1"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 )
 
 const (
@@ -22,7 +21,6 @@ const (
 )
 
 func (i *Implementation) AddUser(ctx context.Context, req *desc.AddUserRequest) (*desc.AddUserResponse, error) {
-
 	// dirty implementation
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",

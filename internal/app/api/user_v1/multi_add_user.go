@@ -10,7 +10,6 @@ import (
 )
 
 func (i *Implementation) MultiAddUser(ctx context.Context, req *desc.MultiAddUserRequest) (*desc.MultiAddUserResponse, error) {
-
 	// dirty implementation
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
