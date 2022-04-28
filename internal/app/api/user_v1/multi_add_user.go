@@ -46,6 +46,9 @@ func (i *Implementation) MultiAddUser(ctx context.Context, req *desc.MultiAddUse
 	for row.Next() {
 		var id int64
 		err = row.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
 		userIds = append(userIds, id)
 	}
 
