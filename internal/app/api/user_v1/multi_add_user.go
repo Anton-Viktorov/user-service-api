@@ -24,7 +24,8 @@ func (i *Implementation) MultiAddUser(ctx context.Context, req *desc.MultiAddUse
 
 	builder := sq.Insert(usersTable).
 		PlaceholderFormat(sq.Dollar).
-		Columns("name, age, email")
+		Columns("name, age, email").
+		Suffix("returning id")
 
 	for _, user := range req.GetUsers() {
 		builder = builder.Values(user.GetName(), user.GetAge(), user.GetEmail())
@@ -41,9 +42,16 @@ func (i *Implementation) MultiAddUser(ctx context.Context, req *desc.MultiAddUse
 	}
 	defer row.Close()
 
+	userIds := make([]int64, 0, len(req.GetUsers()))
+	for row.Next() {
+		var id int64
+		err = row.Scan(&id)
+		userIds = append(userIds, id)
+	}
+
 	return &desc.MultiAddUserResponse{
 		Result: &desc.MultiAddUserResponse_Result{
-			Count: int64(len(req.GetUsers())),
+			Count: int64(len(userIds)),
 		},
 	}, nil
 }
