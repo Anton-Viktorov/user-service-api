@@ -32,19 +32,17 @@ func main() {
 		log.Fatalf("failed to add user %s", err.Error())
 	}
 
-	fmt.Println("=== user id ===")
+	fmt.Println("=== add user ===")
 	fmt.Printf("user id: %d\n", res.GetResult().GetId())
 
 	//get user
-	user, err := client.GetUser(ctx, &desc.GetUserRequest{Id: 1})
+	user, err := client.GetUser(ctx, &desc.GetUserRequest{Id: 2})
 	if err != nil {
 		log.Fatalf("failed to get user %s", err.Error())
 	}
 
 	fmt.Println("=== user info ===")
-	fmt.Printf("name: %s\n", user.GetResult().GetName())
-	fmt.Printf("age: %d\n", user.GetResult().GetAge())
-	fmt.Printf("email: %s\n", user.GetResult().GetEmail())
+	fmt.Printf("user: %s\n", user.GetResult())
 
 	// multi add user
 	reqData := []*desc.MultiAddUserRequest_User{
@@ -73,18 +71,18 @@ func main() {
 		log.Fatalf("failed to get list users %s", err.Error())
 	}
 
-	fmt.Println("=== users list ===")
+	fmt.Println("=== list users ===")
 	fmt.Printf("users info: %s\n", listUsers.GetResult())
 
 	// delete user
-	_, err = client.RemoveUser(ctx, &desc.RemoveUserRequest{Id: 1})
+	_, err = client.RemoveUser(ctx, &desc.RemoveUserRequest{Id: 2})
 	if err != nil {
 		log.Fatalf("failed to remove user %s", err.Error())
 	}
 
 	// update user
 	_, err = client.UpdateUser(ctx, &desc.UpdateUserRequest{
-		Id:    1,
+		Id:    7,
 		Name:  "NewAdmin",
 		Age:   100500,
 		Email: "newadmin@no.no",
