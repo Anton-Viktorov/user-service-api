@@ -15,7 +15,7 @@ const address = "localhost:50051"
 func main() {
 	ctx := context.Background()
 
-	con, err := grpc.Dial(address, grpc.WithInsecure())
+	con, err := grpc.Dial(address, grpc.WithInsecure()) // nolint: static check
 	if err != nil {
 		log.Fatalf("didn't connect: %s", err.Error())
 	}
