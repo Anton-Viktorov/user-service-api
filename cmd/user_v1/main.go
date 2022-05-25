@@ -87,7 +87,7 @@ func startHTTP() error {
 	defer cancel()
 
 	mux := runtime.NewServeMux()
-	opts := []grpc.DialOption{grpc.WithInsecure()} // nolint: static check
+	opts := []grpc.DialOption{grpc.WithInsecure()} // nolint: staticcheck
 
 	err := desc.RegisterUserV1HandlerFromEndpoint(ctx, mux, grpcPort, opts)
 	if err != nil {
