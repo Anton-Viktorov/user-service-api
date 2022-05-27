@@ -7,6 +7,7 @@ import (
 
 	desc "github.com/iamtonydev/user-service-api/pkg/user_v1"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 const address = "localhost:50051"
@@ -14,7 +15,7 @@ const address = "localhost:50051"
 func main() {
 	ctx := context.Background()
 
-	con, err := grpc.Dial(address, grpc.WithInsecure())
+	con, err := grpc.Dial(address, grpc.WithInsecure()) // nolint: staticcheck
 	if err != nil {
 		log.Fatalf("didn't connect: %s", err.Error())
 	}
@@ -36,7 +37,7 @@ func main() {
 	fmt.Printf("user id: %d\n", res.GetResult().GetId())
 
 	//get user
-	user, err := client.GetUser(ctx, &desc.GetUserRequest{Id: 2})
+	user, err := client.GetUser(ctx, &desc.GetUserRequest{Id: 8})
 	if err != nil {
 		log.Fatalf("failed to get user %s", err.Error())
 	}
@@ -66,7 +67,7 @@ func main() {
 	fmt.Printf("users added: %v\n", users.GetResult().GetCount())
 
 	// list users
-	listUsers, err := client.ListUser(ctx, &desc.Empty{})
+	listUsers, err := client.ListUser(ctx, &emptypb.Empty{})
 	if err != nil {
 		log.Fatalf("failed to get list users %s", err.Error())
 	}
@@ -75,14 +76,14 @@ func main() {
 	fmt.Printf("users info: %s\n", listUsers.GetResult())
 
 	// delete user
-	_, err = client.RemoveUser(ctx, &desc.RemoveUserRequest{Id: 2})
+	_, err = client.RemoveUser(ctx, &desc.RemoveUserRequest{Id: 17})
 	if err != nil {
 		log.Fatalf("failed to remove user %s", err.Error())
 	}
 
 	// update user
 	_, err = client.UpdateUser(ctx, &desc.UpdateUserRequest{
-		Id:    7,
+		Id:    20,
 		Name:  "NewAdmin",
 		Age:   100500,
 		Email: "newadmin@no.no",
